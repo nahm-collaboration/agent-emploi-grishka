@@ -12,10 +12,10 @@ const PROFIL = {
 };
 
 const FALLBACK = [
-  { titre:"Responsable Commercial – Installations Solaires", entreprise:"Solveo Energie SA", lieu:"Sion, Valais", type:"CDI", match:91, lien:"https://jobs.ch", transferable:"Gestion portefeuille haut de gamme + partenariats Manor directement transférables.", conseil:"Mentionne ta capacité à piloter des ouvertures de magasins." },
-  { titre:"Chargé de Développement – Transition Énergétique", entreprise:"Romande Energie", lieu:"Martigny / Lausanne", type:"CDI", match:82, lien:"https://romande-energie.ch/carrieres", transferable:"BTS Informatique + commerce = profil hybride rare.", conseil:"Mets en avant ta double compétence tech/commerce dès l'accroche." },
-  { titre:"Coordinateur Projets Photovoltaïques", entreprise:"Helion Energy", lieu:"Viège, Valais", type:"CDI", match:75, lien:"https://helion.ch/jobs", transferable:"Piloter des ouvertures = même logique que coordonner des chantiers.", conseil:"Valorise ton expérience d'animation d'équipes terrain." },
-  { titre:"Business Developer – Mobilité Durable", entreprise:"BKW Energie AG", lieu:"Sion / remote", type:"CDI", match:71, lien:"https://bkw.ch/fr/carrieres", transferable:"Négociation avec Apple, DJI, Devialet montre ta capacité premium.", conseil:"Mets en avant ton anglais, BKW travaille avec des partenaires internationaux." },
+  { titre:"Responsable Commercial – Installations Solaires", entreprise:"Solveo Energie SA", lieu:"Sion, Valais", type:"CDI", match:91, transferable:"Gestion portefeuille haut de gamme + partenariats Manor directement transférables.", conseil:"Mentionne ta capacité à piloter des ouvertures de magasins." },
+  { titre:"Chargé de Développement – Transition Énergétique", entreprise:"Romande Energie", lieu:"Martigny / Lausanne", type:"CDI", match:82, transferable:"BTS Informatique + commerce = profil hybride rare.", conseil:"Mets en avant ta double compétence tech/commerce dès l'accroche." },
+  { titre:"Coordinateur Projets Photovoltaïques", entreprise:"Helion Energy", lieu:"Viège, Valais", type:"CDI", match:75, transferable:"Piloter des ouvertures = même logique que coordonner des chantiers.", conseil:"Valorise ton expérience d'animation d'équipes terrain." },
+  { titre:"Business Developer – Mobilité Durable", entreprise:"BKW Energie AG", lieu:"Sion / remote", type:"CDI", match:71, transferable:"Négociation avec Apple, DJI, Devialet montre ta capacité premium.", conseil:"Mets en avant ton anglais, BKW travaille avec des partenaires internationaux." },
 ];
 
 const STEPS = [
@@ -25,15 +25,18 @@ const STEPS = [
   {id:"email", icon:"📧", label:"EMAIL"},
 ];
 
-const mc = s => s>=85?"#4ade80":s>=70?"#facc15":"#fb923c";
+const mc = score => score>=85?"#4ade80":score>=70?"#facc15":"#fb923c";
 
-const s = {
+const googleSearch = (titre, entreprise) =>
+  `https://www.google.com/search?q=${encodeURIComponent(`${titre} ${entreprise} emploi Suisse`)}`;
+
+const st = {
   root:{maxWidth:760,margin:"0 auto",padding:"24px 20px",fontFamily:"Georgia,serif",background:"#07100a",minHeight:"100vh",color:"#d0e8d8",boxSizing:"border-box"},
   header:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20,paddingBottom:16,borderBottom:"1px solid #0d1f12"},
   avatar:{width:42,height:42,borderRadius:"50%",background:"linear-gradient(135deg,#16a34a,#065f46)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:"bold",color:"#fff",flexShrink:0},
   title:{fontSize:14,fontWeight:"bold",color:"#f0f6fc",letterSpacing:"2px",fontFamily:"monospace"},
   subtitle:{fontSize:11,color:"#2d5c3a",marginTop:3},
-  pill:(st)=>({fontSize:11,padding:"4px 12px",borderRadius:20,background:st==="done"?"#0f2d1a":st==="running"?"#0f2a10":"#111827",color:st==="done"?"#4ade80":st==="running"?"#86efac":"#6b7280",border:`1px solid ${st!=="idle"?"#16a34a":"#1f2937"}`,fontFamily:"monospace"}),
+  pill:(s)=>({fontSize:11,padding:"4px 12px",borderRadius:20,background:s==="done"?"#0f2d1a":s==="running"?"#0f2a10":"#111827",color:s==="done"?"#4ade80":s==="running"?"#86efac":"#6b7280",border:`1px solid ${s!=="idle"?"#16a34a":"#1f2937"}`,fontFamily:"monospace"}),
   pipeline:{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:"#0a1a0d",border:"1px solid #0d1f12",borderRadius:10,padding:12,marginBottom:18,flexWrap:"wrap"},
   pipeRow:{display:"flex",alignItems:"center",gap:5},
   pipeCircle:(a,d)=>({width:30,height:30,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,background:a?"#14532d":d?"#052e16":"#0d1f12",border:`2px solid ${a?"#4ade80":d?"#16a34a":"#1a3a20"}`,transition:"all 0.3s",flexShrink:0}),
@@ -56,9 +59,9 @@ const s = {
   transferBox:{background:"#052e16",border:"1px solid #14532d",borderRadius:6,padding:"7px 10px",fontSize:11,color:"#86efac",marginBottom:8},
   conseilBox:{background:"#1a1000",border:"1px solid #854d0e",borderRadius:6,padding:"7px 10px",fontSize:11,color:"#fbbf24",marginBottom:8},
   lienBtn:{display:"inline-block",fontSize:11,color:"#60a5fa",textDecoration:"none",border:"1px solid #1e3a5f",borderRadius:4,padding:"4px 10px",fontFamily:"monospace"},
-  gmailBtn:{background:"#ea4335",color:"#fff",border:"none",borderRadius:8,padding:"12px 0",fontSize:14,cursor:"pointer",fontFamily:"inherit",fontWeight:"bold",width:"100%",marginTop:14},
-  successBox:{background:"#052e16",border:"1px solid #16a34a",borderRadius:8,padding:14,fontSize:13,color:"#4ade80",textAlign:"center",marginTop:14},
-  resetBtn:{background:"transparent",color:"#2d5c3a",border:"1px solid #0d1f12",borderRadius:6,padding:"8px 16px",fontSize:12,cursor:"pointer",fontFamily:"inherit",marginTop:10},
+  gmailBtn:{display:"block",background:"#ea4335",color:"#fff",borderRadius:8,padding:"12px 0",fontSize:14,fontFamily:"inherit",fontWeight:"bold",width:"100%",textAlign:"center",textDecoration:"none",marginBottom:10,cursor:"pointer"},
+  successBox:{background:"#052e16",border:"1px solid #16a34a",borderRadius:8,padding:12,fontSize:12,color:"#4ade80",textAlign:"center",marginBottom:10},
+  resetBtn:{background:"transparent",color:"#2d5c3a",border:"1px solid #0d1f12",borderRadius:6,padding:"8px 16px",fontSize:12,cursor:"pointer",fontFamily:"inherit"},
 };
 
 export default function App() {
@@ -68,14 +71,14 @@ export default function App() {
   const [completedSteps, setCompletedSteps] = useState([]);
   const [agentLog, setAgentLog] = useState([]);
   const [jobs, setJobs] = useState([]);
-  const [emailSent, setEmailSent] = useState(false);
+  const [gmailLink, setGmailLink] = useState(null);
 
   const addLog = msg => setAgentLog(p => [...p, {time: new Date().toLocaleTimeString("fr-CH"), msg}]);
   const completeStep = id => setCompletedSteps(p => [...p, id]);
 
   const runAgent = async () => {
     if (!recipientEmail.includes("@")) { alert("Email invalide."); return; }
-    setStatus("running"); setAgentLog([]); setJobs([]); setEmailSent(false); setCompletedSteps([]);
+    setStatus("running"); setAgentLog([]); setJobs([]); setGmailLink(null); setCompletedSteps([]);
 
     setCurrentStep("init");
     addLog("🚀 Agent démarré");
@@ -94,7 +97,7 @@ export default function App() {
 Profil : ${PROFIL.prenom} ${PROFIL.nom}, ${PROFIL.localisation}, ${PROFIL.formation}, ${PROFIL.experience}.
 Génère 4 offres réalistes marché suisse romand 2025-2026.
 JSON valide uniquement sans markdown :
-{"jobs":[{"titre":"string","entreprise":"string","lieu":"string","type":"CDI|CDD","match":number,"lien":"string","transferable":"string","conseil":"string"}],"conseil_global":"string"}`;
+{"jobs":[{"titre":"string","entreprise":"string","lieu":"string","type":"CDI|CDD","match":number,"transferable":"string","conseil":"string"}],"conseil_global":"string"}`;
 
     let finalJobs = FALLBACK;
     let conseil = "Cette semaine, priorise les candidatures spontanées auprès des PME solaires valaisannes. Ton profil BTS Informatique + management est rare — contacte Solveo Energie directement.";
@@ -123,7 +126,7 @@ JSON valide uniquement sans markdown :
     setJobs(finalJobs); completeStep("match");
 
     setCurrentStep("email");
-    addLog("📧 Génération du rapport Gmail...");
+    addLog("📧 Génération du rapport...");
     await sleep(400);
 
     const today = new Date().toLocaleDateString("fr-CH",{weekday:"long",day:"numeric",month:"long"});
@@ -148,63 +151,62 @@ ${finalJobs.map((j,i)=>`${i+1}. ${j.titre} — ${j.entreprise} (${j.match}%)\n  
 
 Agent IA · ${PROFIL.prenom} ${PROFIL.nom} · ${PROFIL.localisation}`;
 
-    const gmailLink = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipientEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-    window.open(gmailLink, "_blank");
-    addLog("✅ Gmail ouvert — 1 clic pour envoyer !");
+    const link = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(recipientEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+    setGmailLink(link);
+    addLog("✅ Rapport prêt — clique le bouton Gmail !");
     completeStep("email");
-    setEmailSent(true);
     setStatus("done");
     setCurrentStep(null);
   };
 
-  const reset = () => { setStatus("idle"); setJobs([]); setAgentLog([]); setCompletedSteps([]); setEmailSent(false); };
+  const reset = () => { setStatus("idle"); setJobs([]); setAgentLog([]); setCompletedSteps([]); setGmailLink(null); };
 
   return (
-    <div style={s.root}>
-      <div style={s.header}>
+    <div style={st.root}>
+      <div style={st.header}>
         <div style={{display:"flex",alignItems:"center",gap:14}}>
-          <div style={s.avatar}>GC</div>
+          <div style={st.avatar}>GC</div>
           <div>
-            <div style={s.title}>AGENT VEILLE EMPLOI <span style={{background:"#16a34a",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:4,marginLeft:6}}>VERCEL</span></div>
-            <div style={s.subtitle}>Énergies Renouvelables · {PROFIL.localisation}</div>
+            <div style={st.title}>AGENT VEILLE EMPLOI <span style={{background:"#16a34a",color:"#fff",fontSize:9,padding:"2px 6px",borderRadius:4,marginLeft:6}}>VERCEL</span></div>
+            <div style={st.subtitle}>Énergies Renouvelables · {PROFIL.localisation}</div>
           </div>
         </div>
-        <div style={s.pill(status)}>
+        <div style={st.pill(status)}>
           {status==="idle"&&"⏸ Prêt"}
           {status==="running"&&"⚡ En cours"}
           {status==="done"&&"✓ Terminé"}
         </div>
       </div>
 
-      <div style={s.pipeline}>
+      <div style={st.pipeline}>
         {STEPS.map((step,i) => (
-          <div key={step.id} style={s.pipeRow}>
-            <div style={s.pipeCircle(currentStep===step.id, completedSteps.includes(step.id))}>{step.icon}</div>
-            <div style={s.pipeLabel(currentStep===step.id, completedSteps.includes(step.id))}>{step.label}</div>
-            {i<STEPS.length-1 && <div style={s.arrow}>→</div>}
+          <div key={step.id} style={st.pipeRow}>
+            <div style={st.pipeCircle(currentStep===step.id, completedSteps.includes(step.id))}>{step.icon}</div>
+            <div style={st.pipeLabel(currentStep===step.id, completedSteps.includes(step.id))}>{step.label}</div>
+            {i<STEPS.length-1 && <div style={st.arrow}>→</div>}
           </div>
         ))}
       </div>
 
       {status==="idle" && (
-        <div style={s.card}>
-          <div style={s.cardTitle}>⚙️ Configuration</div>
-          <label style={s.label}>
+        <div style={st.card}>
+          <div style={st.cardTitle}>⚙️ Configuration</div>
+          <label style={st.label}>
             Email destinataire
-            <input style={s.input} type="email" value={recipientEmail} onChange={e=>setRecipientEmail(e.target.value)} />
+            <input style={st.input} type="email" value={recipientEmail} onChange={e=>setRecipientEmail(e.target.value)} />
           </label>
-          <button style={s.btn} onClick={runAgent}>🌱 Lancer l'agent</button>
+          <button style={st.btn} onClick={runAgent}>🌱 Lancer l'agent</button>
         </div>
       )}
 
       {agentLog.length>0 && (
-        <div style={s.card}>
-          <div style={s.cardTitle}>📋 Journal</div>
-          <div style={s.log}>
+        <div style={st.card}>
+          <div style={st.cardTitle}>📋 Journal</div>
+          <div style={st.log}>
             {agentLog.map((e,i)=>(
-              <div key={i} style={s.logLine}>
-                <span style={s.logTime}>{e.time}</span>
-                <span style={s.logMsg}>{e.msg}</span>
+              <div key={i} style={st.logLine}>
+                <span style={st.logTime}>{e.time}</span>
+                <span style={st.logMsg}>{e.msg}</span>
               </div>
             ))}
           </div>
@@ -212,29 +214,34 @@ Agent IA · ${PROFIL.prenom} ${PROFIL.nom} · ${PROFIL.localisation}`;
       )}
 
       {jobs.length>0 && (
-        <div style={s.card}>
-          <div style={s.cardTitle}>💼 Offres sélectionnées</div>
+        <div style={st.card}>
+          <div style={st.cardTitle}>💼 Offres sélectionnées</div>
           {jobs.map((job,i)=>(
-            <div key={i} style={s.jobCard}>
-              <div style={s.jobHeader}>
+            <div key={i} style={st.jobCard}>
+              <div style={st.jobHeader}>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={s.jobTitle}>{job.titre}</div>
-                  <div style={s.jobMeta}>{job.entreprise} · {job.lieu} · <span style={{color:"#4ade80"}}>{job.type}</span></div>
+                  <div style={st.jobTitle}>{job.titre}</div>
+                  <div style={st.jobMeta}>{job.entreprise} · {job.lieu} · <span style={{color:"#4ade80"}}>{job.type}</span></div>
                 </div>
-                <div style={s.matchBadge(mc(job.match))}>{job.match}%</div>
+                <div style={st.matchBadge(mc(job.match))}>{job.match}%</div>
               </div>
-              <div style={s.transferBox}><strong>✓ Ton atout : </strong>{job.transferable}</div>
-              <div style={s.conseilBox}><strong>💡 Conseil : </strong>{job.conseil}</div>
-              <a href={job.lien} target="_blank" rel="noreferrer" style={s.lienBtn}>Voir l'offre →</a>
+              <div style={st.transferBox}><strong>✓ Ton atout : </strong>{job.transferable}</div>
+              <div style={st.conseilBox}><strong>💡 Conseil : </strong>{job.conseil}</div>
+              <a href={googleSearch(job.titre, job.entreprise)} target="_blank" rel="noreferrer" style={st.lienBtn}>
+                🔍 Rechercher cette offre →
+              </a>
             </div>
           ))}
         </div>
       )}
 
-      {emailSent && (
-        <div style={s.card}>
-          <div style={s.successBox}>✅ Gmail ouvert — rapport prêt à envoyer en 1 clic !</div>
-          <button style={s.resetBtn} onClick={reset}>↩ Nouvelle recherche</button>
+      {gmailLink && (
+        <div style={st.card}>
+          <a href={gmailLink} target="_blank" rel="noreferrer" style={st.gmailBtn}>
+            📬 Ouvrir Gmail et envoyer le rapport
+          </a>
+          <div style={st.successBox}>✅ Rapport généré — 1 clic pour envoyer !</div>
+          <button style={st.resetBtn} onClick={reset}>↩ Nouvelle recherche</button>
         </div>
       )}
     </div>
